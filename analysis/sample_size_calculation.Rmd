@@ -1,0 +1,55 @@
+---
+title: "sample size determination"
+output: 
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+date: "2025-08-01"
+---
+
+
+```{r, message=F, warning=F}
+calculate_sample_size <- function(N, p, z = 1.96, e = 0.05,
+                                  min_threshold = 300, max_threshold = 384,
+                                  min_threshold_cutoff = 0.05,   # p < 5%
+                                  max_threshold_cutoff = 0.95) { # p > 95%
+  # If p is not between 0 and 1, treat as percentage
+  if (p > 1) p <- p / 100
+
+  # Cochran's sample size formula for large population (no FPC)
+  n0 <- (z^2 * p * (1 - p)) / (e^2)
+
+  # Apply finite population correction
+  n_fpc <- (N * n0) / (N + n0 - 1)
+
+  # Apply thresholds for extreme proportions
+  if (p < min_threshold_cutoff || p > max_threshold_cutoff) {
+    return(max(min_threshold, min(n_fpc, max_threshold)))
+  }
+
+  # Return rounded FPC-adjusted sample size
+  return(round(n_fpc))
+}
+
+
+sample_size_proportion <- function(p, margin_error, population, z_score = 1.96){
+    q = 1 - p
+    z2 = (z_score)^2
+    d2 = (margin_error)^2
+    N = (p*q*z2)/d2
+    n = N/(1+(N/population))
+    output <- c(N, n)
+    print(output)
+}
+
+```
+
+
+```{r, message=F, warning=F}
+calculate_sample_size(6867, p=0.1645)
+calculate_sample_size(3605, p=0.0064)
+calculate_sample_size(11304, p=0.2958)
+calculate_sample_size(142561, p=0.9922)
+
+sample_size_proportion(p=0.9922, 0.05, 152561)
+```
