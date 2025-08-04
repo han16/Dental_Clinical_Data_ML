@@ -9,47 +9,73 @@ date: "2025-08-01"
 
 
 ```{r, message=F, warning=F}
-calculate_sample_size <- function(N, p, z = 1.96, e = 0.05,
-                                  min_threshold = 300, max_threshold = 384,
-                                  min_threshold_cutoff = 0.05,   # p < 5%
-                                  max_threshold_cutoff = 0.95) { # p > 95%
-  # If p is not between 0 and 1, treat as percentage
-  if (p > 1) p <- p / 100
-
-  # Cochran's sample size formula for large population (no FPC)
-  n0 <- (z^2 * p * (1 - p)) / (e^2)
-
-  # Apply finite population correction
-  n_fpc <- (N * n0) / (N + n0 - 1)
-
-  # Apply thresholds for extreme proportions
-  if (p < min_threshold_cutoff || p > max_threshold_cutoff) {
-    return(max(min_threshold, min(n_fpc, max_threshold)))
-  }
-
-  # Return rounded FPC-adjusted sample size
-  return(round(n_fpc))
-}
-
-
-sample_size_proportion <- function(p, margin_error, population, z_score = 1.96){
-    q = 1 - p
-    z2 = (z_score)^2
-    d2 = (margin_error)^2
-    N = (p*q*z2)/d2
-    n = N/(1+(N/population))
-    output <- c(N, n)
-    print(output)
-}
-
+library(ggplot2)
 ```
+
+
 
 
 ```{r, message=F, warning=F}
-calculate_sample_size(6867, p=0.1645)
-calculate_sample_size(3605, p=0.0064)
-calculate_sample_size(11304, p=0.2958)
-calculate_sample_size(142561, p=0.9922)
 
-sample_size_proportion(p=0.9922, 0.05, 152561)
+# Sample size function
+sample_size_proportion <- function(p, margin_error, population, z_score = 1.96){
+  q <- 1 - p
+  z2 <- (z_score)^2
+  d2 <- margin_error^2
+  N <- (p * q * z2) / d2 
+  n <- N / (1 + (N / population))
+  
+  return(min(N,n))
+}
+
 ```
+
+
+
+
+
+
+```{r, message=F, warning=F}
+# Set up
+p <- 1091 / 30498
+population <- 30498
+relative_errors <- seq(0.1, 1, by = 0.1)  # 10% to 100% of p
+margin_errors <- p * relative_errors     # Convert to absolute margin of error
+
+
+# Calculate sample sizes
+sample_sizes <- sapply(margin_errors, function(d) {
+  sample_size_proportion(p, margin_error = d, population = population)
+})
+
+# Make a data frame for plotting
+df <- data.frame(
+  Relative_Error = relative_errors,
+  Sample_Size = round(sample_sizes)
+)
+
+# Draw bar plot with labels on top
+ggplot(df, aes(x = factor(Relative_Error), y = Sample_Size)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = Sample_Size), vjust = -0.5, size = 3) +
+  labs(
+    title = "Sample Size vs. Relative Margin of Error",
+    x = "Margin of Error (as proportion of p)",
+    y = "Sample Size"
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+
+```
+
+
+* if margin of error is alowed at 20% of the proportion, the sample size would be 2,386.  
+
+
+## reference 
+
+1. [Organizational Research: Determining
+Appropriate Sample Size in Survey Research](https://www.opalco.com/wp-content/uploads/2014/10/Reading-Sample-Size1.pdf)

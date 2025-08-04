@@ -400,7 +400,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2025-08-01
+<strong>Last updated:</strong> 2025-08-04
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -438,10 +438,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16DentalClinicalDataMLtreefe610ad33151341604cb0d376b6b2c68a2035d34targetblankfe610ada">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16DentalClinicalDataMLtreeb047558b34587381f4dd967aa4dd80d3fd9265edtargetblankb047558a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/Dental_Clinical_Data_ML/tree/fe610ad33151341604cb0d376b6b2c68a2035d34" target="_blank">fe610ad</a>
+<a href="https://github.com/han16/Dental_Clinical_Data_ML/tree/b047558b34587381f4dd967aa4dd80d3fd9265ed" target="_blank">b047558</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16DentalClinicalDataMLtreefe610ad33151341604cb0d376b6b2c68a2035d34targetblankfe610ada"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16DentalClinicalDataMLtreeb047558b34587381f4dd967aa4dd80d3fd9265edtargetblankb047558a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/Dental_Clinical_Data_ML/tree/fe610ad33151341604cb0d376b6b2c68a2035d34" target="_blank">fe610ad</a>.
+<a href="https://github.com/han16/Dental_Clinical_Data_ML/tree/b047558b34587381f4dd967aa4dd80d3fd9265ed" target="_blank">b047558</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -566,11 +566,11 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Untracked files:
-    Untracked:  analysis/sample_size_calculation.Rmd
+Ignored files:
+    Ignored:    .Rhistory
 
 Unstaged changes:
-    Modified:   analysis/index.Rmd
+    Modified:   analysis/sample_size_calculation.Rmd
 
 </code></pre>
 <p>
@@ -585,56 +585,135 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/sample_size_calculation.Rmd</code>) and HTML
+(<code>docs/sample_size_calculation.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/Dental_Clinical_Data_ML/blob/b047558b34587381f4dd967aa4dd80d3fd9265ed/analysis/sample_size_calculation.Rmd" target="_blank">b047558</a>
+</td>
+<td>
+han
+</td>
+<td>
+2025-08-01
+</td>
+<td>
+8/1/2025
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/Dental_Clinical_Data_ML/b047558b34587381f4dd967aa4dd80d3fd9265ed/docs/sample_size_calculation.html" target="_blank">b047558</a>
+</td>
+<td>
+han
+</td>
+<td>
+2025-08-01
+</td>
+<td>
+8/1/2025
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
 </div>
-<pre class="r"><code>calculate_sample_size &lt;- function(N, p, z = 1.96, e = 0.05,
-                                  min_threshold = 300, max_threshold = 384,
-                                  min_threshold_cutoff = 0.05,   # p &lt; 5%
-                                  max_threshold_cutoff = 0.95) { # p &gt; 95%
-  # If p is not between 0 and 1, treat as percentage
-  if (p &gt; 1) p &lt;- p / 100
-
-  # Cochran&#39;s sample size formula for large population (no FPC)
-  n0 &lt;- (z^2 * p * (1 - p)) / (e^2)
-
-  # Apply finite population correction
-  n_fpc &lt;- (N * n0) / (N + n0 - 1)
-
-  # Apply thresholds for extreme proportions
-  if (p &lt; min_threshold_cutoff || p &gt; max_threshold_cutoff) {
-    return(max(min_threshold, min(n_fpc, max_threshold)))
-  }
-
-  # Return rounded FPC-adjusted sample size
-  return(round(n_fpc))
-}
-
-
+<pre class="r"><code>library(ggplot2)</code></pre>
+<pre class="r"><code># Sample size function
 sample_size_proportion &lt;- function(p, margin_error, population, z_score = 1.96){
-    q = 1 - p
-    z2 = (z_score)^2
-    d2 = (margin_error)^2
-    N = (p*q*z2)/d2
-    n = N/(1+(N/population))
-    output &lt;- c(N, n)
-    print(output)
+  q &lt;- 1 - p
+  z2 &lt;- (z_score)^2
+  d2 &lt;- margin_error^2
+  N &lt;- (p * q * z2) / d2 
+  n &lt;- N / (1 + (N / population))
+  
+  return(min(N,n))
 }</code></pre>
-<pre class="r"><code>calculate_sample_size(6867, p=0.1645)</code></pre>
-<pre><code>[1] 205</code></pre>
-<pre class="r"><code>calculate_sample_size(3605, p=0.0064)</code></pre>
-<pre><code>[1] 300</code></pre>
-<pre class="r"><code>calculate_sample_size(11304, p=0.2958)</code></pre>
-<pre><code>[1] 311</code></pre>
-<pre class="r"><code>calculate_sample_size(142561, p=0.9922)</code></pre>
-<pre><code>[1] 300</code></pre>
-<pre class="r"><code>sample_size_proportion(p=0.9922, 0.05, 152561)</code></pre>
-<pre><code>[1] 11.89230 11.89138</code></pre>
+<pre class="r"><code># Set up
+p &lt;- 1091 / 30498
+population &lt;- 30498
+relative_errors &lt;- seq(0.1, 1, by = 0.1)  # 10% to 100% of p
+margin_errors &lt;- p * relative_errors     # Convert to absolute margin of error
+
+
+# Calculate sample sizes
+sample_sizes &lt;- sapply(margin_errors, function(d) {
+  sample_size_proportion(p, margin_error = d, population = population)
+})
+
+# Make a data frame for plotting
+df &lt;- data.frame(
+  Relative_Error = relative_errors,
+  Sample_Size = round(sample_sizes)
+)
+
+# Draw bar plot with labels on top
+ggplot(df, aes(x = factor(Relative_Error), y = Sample_Size)) +
+  geom_bar(stat = &quot;identity&quot;, fill = &quot;steelblue&quot;) +
+  geom_text(aes(label = Sample_Size), vjust = -0.5, size = 3) +
+  labs(
+    title = &quot;Sample Size vs. Relative Margin of Error&quot;,
+    x = &quot;Margin of Error (as proportion of p)&quot;,
+    y = &quot;Sample Size&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;)
+  )</code></pre>
+<p><img src="figure/sample_size_calculation.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ul>
+<li>if margin of error is alowed at 20% of the proportion, the sample
+size would be 2,386.</li>
+</ul>
+<div id="reference" class="section level2">
+<h2>reference</h2>
+<ol style="list-style-type: decimal">
+<li><a
+href="https://www.opalco.com/wp-content/uploads/2014/10/Reading-Sample-Size1.pdf">Organizational
+Research: Determining Appropriate Sample Size in Survey
+Research</a></li>
+</ol>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -646,7 +725,7 @@ Session information
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.3.2 (2023-10-31 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
-Running under: Windows 10 x64 (build 19045)
+Running under: Windows 11 x64 (build 26100)
 
 Matrix products: default
 
@@ -664,16 +743,23 @@ tzcode source: internal
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
+other attached packages:
+[1] ggplot2_3.5.1
+
 loaded via a namespace (and not attached):
- [1] vctrs_0.6.5       cli_3.6.2         knitr_1.49        rlang_1.1.2      
- [5] xfun_0.50.6       stringi_1.8.3     promises_1.3.2    jsonlite_1.8.9   
- [9] workflowr_1.7.1   glue_1.8.0        rprojroot_2.0.4   git2r_0.35.0     
-[13] htmltools_0.5.8.1 httpuv_1.6.15     sass_0.4.9        rmarkdown_2.29   
-[17] evaluate_1.0.3    jquerylib_0.1.4   tibble_3.2.1      fastmap_1.2.0    
-[21] yaml_2.3.8        lifecycle_1.0.4   stringr_1.5.1     compiler_4.3.2   
-[25] fs_1.6.5          Rcpp_1.0.11       pkgconfig_2.0.3   rstudioapi_0.17.1
-[29] later_1.4.1       digest_0.6.33     R6_2.5.1          pillar_1.10.1    
-[33] magrittr_2.0.3    bslib_0.9.0       tools_4.3.2       cachem_1.1.0     </code></pre>
+ [1] gtable_0.3.6      jsonlite_1.8.9    dplyr_1.1.4       compiler_4.3.2   
+ [5] promises_1.3.2    tidyselect_1.2.1  Rcpp_1.0.11       stringr_1.5.1    
+ [9] git2r_0.35.0      later_1.4.1       jquerylib_0.1.4   scales_1.3.0     
+[13] yaml_2.3.8        fastmap_1.2.0     R6_2.5.1          labeling_0.4.3   
+[17] generics_0.1.3    workflowr_1.7.1   knitr_1.49        tibble_3.2.1     
+[21] munsell_0.5.1     rprojroot_2.0.4   bslib_0.9.0       pillar_1.10.1    
+[25] rlang_1.1.2       cachem_1.1.0      stringi_1.8.3     httpuv_1.6.15    
+[29] xfun_0.50.6       fs_1.6.5          sass_0.4.9        cli_3.6.2        
+[33] withr_3.0.2       magrittr_2.0.3    digest_0.6.33     grid_4.3.2       
+[37] rstudioapi_0.17.1 lifecycle_1.0.4   vctrs_0.6.5       evaluate_1.0.3   
+[41] glue_1.8.0        farver_2.1.2      whisker_0.4.1     colorspace_2.1-0 
+[45] rmarkdown_2.29    tools_4.3.2       pkgconfig_2.0.3   htmltools_0.5.8.1</code></pre>
+</div>
 </div>
 
 
