@@ -72,7 +72,7 @@ ggplot(df, aes(x = factor(Relative_Error), y = Sample_Size)) +
 ```
 
 
-* if margin of error is alowed at 20% of the proportion, the sample size would be 2,386.  
+* if margin of error is allowed at 20% of the proportion, the sample size would be 2,386.  
 
 
 ## reference 
