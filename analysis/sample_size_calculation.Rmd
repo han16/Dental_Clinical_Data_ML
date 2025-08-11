@@ -129,6 +129,70 @@ ggplot(df_long, aes(x = factor(margin_errors), y = Count, fill = Measure)) +
 
  
 
+## year 2022 
+
+
+```{r, message=F, warning=F, eval=T}
+# Set up
+numerator=264
+denominator=6355
+p <- numerator / denominator
+#p=0.5
+population <- denominator
+#relative_errors <- seq(0.1, 1, by = 0.1)  # 10% to 100% of p
+#margin_errors <- p * relative_errors     # Convert to absolute margin of error
+margin_errors <- seq(0.01, 0.05, by=0.01)
+
+
+# Calculate sample sizes
+sample_sizes <- sapply(margin_errors, function(d) {
+  sample_size_proportion(p, margin_error = d, population = population)
+})
+
+# Make a data frame for plotting
+df <- data.frame(
+  margin_errors = margin_errors,
+  Sample_Size = round(sample_sizes)
+)
+
+df$cases=round(df$Sample_Size*numerator/denominator)
+
+
+
+library(dplyr)
+library(tidyr)
+# Reshape to long format
+df_long <- df %>%
+  pivot_longer(cols = c(Sample_Size, cases),
+               names_to = "Measure",
+               values_to = "Count")
+
+# Create side-by-side bar plot
+ggplot(df_long, aes(x = factor(margin_errors), y = Count, fill = Measure)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.7)) +
+  geom_text(aes(label = Count),
+            position = position_dodge(width = 0.7),
+            vjust = -0.5, size = 3.5) +
+  labs(
+    title = "Sample Size and Cases vs. Margin of Error",
+    x = "Margin of Error",
+    y = ""
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  ) +
+  scale_fill_manual(values = c("steelblue", "darkorange"))
+```
+
+
+
+* with margin of error of 0.02, sample size is 361. 
+
+
+
+
 
 ## reference 
 
