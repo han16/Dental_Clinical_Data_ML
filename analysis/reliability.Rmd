@@ -1,0 +1,97 @@
+---
+title: "08/15 2025"
+output: 
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+date: "2025-08-15"
+---
+
+
+
+
+```{r, echo=F, message=F, warning=F, results=F}
+rm(list=ls())
+library(rprojroot)
+library(ggplot2)
+library(readxl)
+library(DT)
+root <- rprojroot::find_rstudio_root_file()
+
+```
+
+
+
+```{r, message=F, warning=F}
+data_raw=read_excel((file.path(root, "..\\data_for_reliability.xlsx")))
+
+```
+
+
+
+```{r, message=F, warning=F}
+library(dplyr)
+library(tidyr)
+library(irr)
+
+# Variables of interest
+variables <- c("M_HOMECARE?", "M_DIABETES?", "M_PERIO_RISK_ASSESS_6WEEKS?", "M_DQM_7_NUM")
+
+# Create results data frame
+kappa_summary <- data.frame(
+  variable = character(),
+  kappa_value = numeric(),
+  p_value = numeric(),
+  stringsAsFactors = FALSE
+)
+
+for (var in variables) {
+  # Reshape to wide format
+  data_wide <- data_raw %>%
+    select(ID, all_of(var), rater) %>%
+    pivot_wider(names_from = rater, values_from = all_of(var))
+  
+  # Compute Cohen's Kappa
+  kappa_res <- kappa2(data_wide[, -1])
+  
+  # Extract Kappa value and p-value
+  kappa_summary <- rbind(kappa_summary, data.frame(
+    variable = var,
+    kappa_value = round(kappa_res$value,4), 
+    p_value = ifelse(kappa_res$p.value<0.0001, "<0.0001", round(kappa_res$p.value, 4))
+  ))
+}
+
+ kappa_summary %>%
+datatable(extensions = 'Buttons',
+          caption = "",
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+
+```
+
+
+
+* un-weighted Cohen's kappa  was used 
+
+* threshold used for interpreting the results 
+
+
+
+| Kappa Value     | Strength of Agreement |
+| --------------- | --------------------- |
+| **< 0.00**      | Poor                  |
+| **0.00 – 0.20** | Slight                |
+| **0.21 – 0.40** | Fair                  |
+| **0.41 – 0.60** | Moderate              |
+| **0.61 – 0.80** | Substantial           |
+| **0.81 – 1.00** | Almost perfect        |
+
+
+
+## reference 
+
+[kappa value thresholds](https://surge-ai.medium.com/inter-annotator-agreement-an-introduction-to-cohens-kappa-statistic-dcc15ffa5ac4)
+
